@@ -6,20 +6,11 @@ function multiplicador() {
     var imagens = [
         "./images/j001.jpg",
         "./images/j002.jpg",
-        "./images/j003.jpg",
-        "./images/j004.jpg",
-        "./images/j005.jpg",
-        "./images/j006.jpg",
-        "./images/j007.jpg",
-        "./images/j008.jpg",
-        "./images/j009.jpg",
-        "./images/j010.jpg",
-        "./images/j011.jpg",
-        "./images/j012.jpg"
+        "./images/j003.jpg"
     ];
 
     // Array com os pesos das imagens para seleção ponderada
-    var pesos = [5, 4, 3, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.2, 0.2, 0.1];
+    var pesos = [5, 4, 1];
 
     // Array com os multiplicadores de ganhos para cada imagem
     var multiplicadores = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24];
