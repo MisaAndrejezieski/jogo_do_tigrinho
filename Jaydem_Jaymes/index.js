@@ -60,7 +60,7 @@ function multiplicador() {
     setTimeout(function () {
         clearInterval(rodando);
         verifiqueSeGanhou();
-    }, 1000);
+    }, 2000);
 
     // Função para rodar os slots
     function rodar() {
@@ -114,7 +114,7 @@ function multiplicador() {
 
         // Verifica se todas as imagens são iguais
         if (resultados.every((val, i, arr) => val === arr[0])) {
-            ganhoTotal = multiplicadores * 10;
+            ganhoTotal = multiplicadoresGanho * 10;
             ganhou = true;
         }
 
