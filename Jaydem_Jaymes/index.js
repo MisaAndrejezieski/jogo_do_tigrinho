@@ -19,7 +19,7 @@ function multiplicador() {
     ];
 
     // Array com os pesos das imagens para seleção ponderada
-    var pesos = [5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    var pesos = [5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     // Array com os multiplicadores de ganhos para cada imagem
     var multiplicadores = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24];
@@ -114,7 +114,7 @@ function multiplicador() {
 
         // Verifica se todas as imagens são iguais
         if (resultados.every((val, i, arr) => val === arr[0])) {
-            ganhoTotal = multiplicadoresGanho * 10;
+            ganhoTotal = ganho * 100;
             ganhou = true;
         }
 
