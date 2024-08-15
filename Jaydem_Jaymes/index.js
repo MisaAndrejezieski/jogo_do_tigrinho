@@ -60,7 +60,7 @@ function multiplicador() {
     setTimeout(function () {
         clearInterval(rodando);
         verifiqueSeGanhou();
-    }, 2000);
+    }, 500);
 
     // Função para rodar os slots
     function rodar() {
