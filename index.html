@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Jogo do Tigrinho</title>
+    <!-- Importação dos arquivos de estilo e script -->
     <link rel="stylesheet" href="./style.css">
     <script src="./script.js" defer></script>
 </head>
 <body>
 
 <div id="container">
+    <!-- Seção de informações do jogo (saldo e apostas) -->
     <div class="game-info">
+        <!-- Container para exibição do saldo -->
         <div class="balance-container">
             <span>Saldo: <span id="balance">1000</span> moedas</span>
         </div>
+        <!-- Container para controle de apostas -->
         <div class="bet-container">
             <button onclick="decreaseBet()">-</button>
             <span>Aposta: <span id="current-bet">10</span> moedas</span>
@@ -20,24 +24,27 @@
         </div>
     </div>
 
+    <!-- Área principal do caça-níquel -->
     <div class="window-border">
         <div class="window">
+            <!-- Estrutura de 3 colunas com espaçadores -->
             <div class="outer-spacer"></div>
             <div class="outer-col">
-                <div class="col"></div>
+                <div class="col"></div> <!-- Primeira coluna de símbolos -->
             </div>
             <div class="outer-spacer"></div>
             <div class="outer-col">
-                <div class="col"></div>
+                <div class="col"></div> <!-- Segunda coluna de símbolos -->
             </div>
             <div class="outer-spacer"></div>
             <div class="outer-col">
-                <div class="col"></div>
+                <div class="col"></div> <!-- Terceira coluna de símbolos -->
             </div>
             <div class="outer-spacer"></div>
         </div>
     </div>
 
+    <!-- Botão para iniciar o jogo -->
     <input type="button" onclick="spin(this)" class="start-button" value="Girar"/>
 </div>
 
