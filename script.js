@@ -13,14 +13,15 @@ const BASE_SPINNING_DURATION = 2.7;
  */
 const COLUMN_SPINNING_DURATION = 0.3;
 
-
 var cols;
 
+let playerBalance = 1000; // Saldo inicial
+let currentBet = 10; // Aposta inicial
 
 window.addEventListener('DOMContentLoaded', function(event) {
     cols = document.querySelectorAll('.col');
-
     setInitialItems();
+    updateUI();
 });
 
 function setInitialItems() {
@@ -43,12 +44,39 @@ function setInitialItems() {
     }
 }
 
+function updateUI() {
+    document.getElementById('balance').textContent = playerBalance;
+    document.getElementById('current-bet').textContent = currentBet;
+}
+
+function increaseBet() {
+    if (currentBet + 10 <= playerBalance) {
+        currentBet += 10;
+        updateUI();
+    }
+}
+
+function decreaseBet() {
+    if (currentBet - 10 >= 10) {
+        currentBet -= 10;
+        updateUI();
+    }
+}
+
 /**
  * Called when the start-button is pressed.
  *
  * @param elem The button itself
  */
 function spin(elem) {
+    if (playerBalance < currentBet) {
+        window.alert("Saldo insuficiente!");
+        return;
+    }
+    
+    playerBalance -= currentBet;
+    updateUI();
+
     let duration = BASE_SPINNING_DURATION + randomDuration();
 
     for (let col of cols) { // set the animation duration for each column
@@ -77,6 +105,7 @@ function spin(elem) {
  * Sets the result items at the beginning and the end of the columns
  */
 function setResult() {
+    let allResults = [];
     for (let col of cols) {
 
         // generate 3 random items
@@ -85,6 +114,7 @@ function setResult() {
             getRandomIcon(),
             getRandomIcon()
         ];
+        allResults.push(results[1]); // guardamos o item do meio de cada coluna
 
         let icons = col.querySelectorAll('.icon img');
         // replace the first and last three items of each column with the generated items
@@ -93,8 +123,12 @@ function setResult() {
             icons[(icons.length - 3) + x].setAttribute('src', 'items/' + results[x] + '.png');
         }
     }
-    if (results[0] == results[1] == results[2]){
-        window.alert("you won!!");
+    
+    if (allResults[0] === allResults[1] && allResults[1] === allResults[2]) {
+        const prize = currentBet * 5; // 5x a aposta em caso de vitória
+        playerBalance += prize;
+        window.alert(`Parabéns! Você ganhou ${prize} moedas!!`);
+        updateUI();
     }
 }
 

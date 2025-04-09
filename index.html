@@ -1,14 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Sloty</title>
+    <title>Jogo do Tigrinho</title>
     <link rel="stylesheet" href="./style.css">
     <script src="./script.js" defer></script>
 </head>
 <body>
 
 <div id="container">
+    <div class="game-info">
+        <div class="balance-container">
+            <span>Saldo: <span id="balance">1000</span> moedas</span>
+        </div>
+        <div class="bet-container">
+            <button onclick="decreaseBet()">-</button>
+            <span>Aposta: <span id="current-bet">10</span> moedas</span>
+            <button onclick="increaseBet()">+</button>
+        </div>
+    </div>
+
     <div class="window-border">
         <div class="window">
             <div class="outer-spacer"></div>
@@ -27,7 +38,7 @@
         </div>
     </div>
 
-    <input type="button" onclick="spin(this)" class="start-button" value="Spin"/>
+    <input type="button" onclick="spin(this)" class="start-button" value="Girar"/>
 </div>
 
 </body>
