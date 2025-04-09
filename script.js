@@ -1,54 +1,59 @@
+// Lista de ícones disponíveis no jogo
 const ICONS = [
     'apple', 'apricot', 'banana', 'big_win', 'cherry', 'grapes', 'lemon', 'lucky_seven', 'orange', 'pear', 'strawberry', 'watermelon',
 ];
 
-/**
- * @type {number} The minimum spin time in seconds
- */
-const BASE_SPINNING_DURATION = 2.7;
+// Configurações de tempo para as animações
+const BASE_SPINNING_DURATION = 2.7;    // Duração base do giro em segundos
+const COLUMN_SPINNING_DURATION = 0.3;  // Duração adicional por coluna
 
-/**
- * @type {number} The additional duration to the base duration for each row (in seconds).
- * It makes the typical effect that the first reel ends, then the second, and so on...
- */
-const COLUMN_SPINNING_DURATION = 0.3;
+// Variáveis globais
+var cols;                   // Referência às colunas do jogo
+let playerBalance = 1000;   // Saldo inicial do jogador
+let currentBet = 10;       // Valor inicial da aposta
 
-var cols;
-
-let playerBalance = 1000; // Saldo inicial
-let currentBet = 10; // Aposta inicial
-
+// Inicialização quando o DOM estiver carregado
 window.addEventListener('DOMContentLoaded', function(event) {
     cols = document.querySelectorAll('.col');
     setInitialItems();
     updateUI();
 });
 
+/**
+ * Preenche as colunas com ícones aleatórios iniciais
+ */
 function setInitialItems() {
-    let baseItemAmount = 40;
+    let baseItemAmount = 40;  // Quantidade base de ícones por coluna
 
     for (let i = 0; i < cols.length; ++i) {
         let col = cols[i];
-        let amountOfItems = baseItemAmount + (i * 3); // Increment the amount for each column
+        let amountOfItems = baseItemAmount + (i * 3); // Incrementa a quantidade para cada coluna
         let elms = '';
         let firstThreeElms = '';
 
+        // Gera os ícones aleatórios
         for (let x = 0; x < amountOfItems; x++) {
             let icon = getRandomIcon();
             let item = '<div class="icon" data-item="' + icon + '"><img src="items/' + icon + '.png"></div>';
             elms += item;
 
-            if (x < 3) firstThreeElms += item; // Backup the first three items because the last three must be the same
+            if (x < 3) firstThreeElms += item; // Backup dos primeiros três itens
         }
         col.innerHTML = elms + firstThreeElms;
     }
 }
 
+/**
+ * Atualiza a interface com o saldo e aposta atual
+ */
 function updateUI() {
     document.getElementById('balance').textContent = playerBalance;
     document.getElementById('current-bet').textContent = currentBet;
 }
 
+/**
+ * Aumenta o valor da aposta em 10 moedas
+ */
 function increaseBet() {
     if (currentBet + 10 <= playerBalance) {
         currentBet += 10;
@@ -56,6 +61,9 @@ function increaseBet() {
     }
 }
 
+/**
+ * Diminui o valor da aposta em 10 moedas
+ */
 function decreaseBet() {
     if (currentBet - 10 >= 10) {
         currentBet -= 10;
@@ -64,80 +72,86 @@ function decreaseBet() {
 }
 
 /**
- * Called when the start-button is pressed.
- *
- * @param elem The button itself
+ * Inicia o giro do caça-níquel
+ * @param {HTMLElement} elem - O botão que iniciou o giro
  */
 function spin(elem) {
+    // Verifica se há saldo suficiente
     if (playerBalance < currentBet) {
         window.alert("Saldo insuficiente!");
         return;
     }
     
+    // Deduz a aposta do saldo
     playerBalance -= currentBet;
     updateUI();
 
     let duration = BASE_SPINNING_DURATION + randomDuration();
 
-    for (let col of cols) { // set the animation duration for each column
+    // Configura a duração da animação para cada coluna
+    for (let col of cols) {
         duration += COLUMN_SPINNING_DURATION + randomDuration();
         col.style.animationDuration = duration + "s";
     }
 
-    // disable the start-button
+    // Desabilita o botão durante o giro
     elem.setAttribute('disabled', true);
 
-    // set the spinning class so the css animation starts to play
+    // Inicia a animação
     document.getElementById('container').classList.add('spinning');
 
-    // set the result delayed
-    // this would be the right place to request the combination from the server
+    // Define o resultado após metade do tempo base
     window.setTimeout(setResult, BASE_SPINNING_DURATION * 1000 / 2);
 
+    // Reativa o botão após o fim da animação
     window.setTimeout(function () {
-        // after the spinning is done, remove the class and enable the button again
         document.getElementById('container').classList.remove('spinning');
         elem.removeAttribute('disabled');
     }.bind(elem), duration * 1000);
 }
 
 /**
- * Sets the result items at the beginning and the end of the columns
+ * Define o resultado do giro e verifica vitórias
  */
 function setResult() {
     let allResults = [];
     for (let col of cols) {
-
-        // generate 3 random items
+        // Gera 3 ícones aleatórios para cada coluna
         let results = [
             getRandomIcon(),
             getRandomIcon(),
             getRandomIcon()
         ];
-        allResults.push(results[1]); // guardamos o item do meio de cada coluna
+        allResults.push(results[1]); // Guarda o item do meio para verificação
 
+        // Atualiza os ícones na coluna
         let icons = col.querySelectorAll('.icon img');
-        // replace the first and last three items of each column with the generated items
         for (let x = 0; x < 3; x++) {
             icons[x].setAttribute('src', 'items/' + results[x] + '.png');
             icons[(icons.length - 3) + x].setAttribute('src', 'items/' + results[x] + '.png');
         }
     }
     
+    // Verifica se ganhou (3 ícones iguais no meio)
     if (allResults[0] === allResults[1] && allResults[1] === allResults[2]) {
-        const prize = currentBet * 5; // 5x a aposta em caso de vitória
+        const prize = currentBet * 5; // Prêmio é 5x o valor apostado
         playerBalance += prize;
         window.alert(`Parabéns! Você ganhou ${prize} moedas!!`);
         updateUI();
     }
 }
 
+/**
+ * Retorna um ícone aleatório da lista de ícones
+ * @returns {string} Nome do ícone selecionado
+ */
 function getRandomIcon() {
     return ICONS[Math.floor(Math.random() * ICONS.length)];
 }
 
 /**
- * @returns {number} 0.00 to 0.09 inclusive
+ * Gera uma duração aleatória para adicionar variação à animação
+ * @returns {number} Valor entre 0.00 e 0.09
  */
 function randomDuration() {
     return Math.floor(Math.random() * 10) / 100;
